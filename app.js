@@ -116,6 +116,8 @@ app.post("/", function (req, res) {
       foundList.items.push(item);
       foundList.save();
       res.redirect("/" + listName);
+    }).catch((e)=>{
+      console.log(e.message);
     });
   }
 });
@@ -139,6 +141,8 @@ app.post("/delete", function (req, res) {
       { $pull: { items: { _id: checkedItemId } } }
     ).then(() => {
       res.redirect("/" + listName);
+    }).catch((e)=>{
+      console.log(e.message);
     });
   }
 });
