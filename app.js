@@ -52,24 +52,25 @@ const List = mongoose.model("List", listSchema);
 //
 
 app.get("/", function (req, res) {
-  Item.find({}, "name")
-    .then((foundItems) => {
-      if (foundItems.length === 0) {
-        Item.insertMany(defaultItems)
-          .then(() => {
-            console.log("successfully inserted");
-          })
-          .catch((e) => {
-            console.log(e.message);
-          });
-        res.redirect("/");
-      } else {
-        res.render("list", { listTitle: "Today", newListItems: foundItems });
-      }
-    })
-    .catch((e) => {
+    try{
+      Item.find({}, "name",(foundItems) => {
+        if (foundItems.length === 0) {
+          Item.insertMany(defaultItems)
+            // .then(() => {
+            //   console.log("successfully inserted");
+            // })
+            // .catch((e) => {
+            //   console.log(e.message);
+            // });
+          res.redirect("/");
+        } else {
+          res.render("list", { listTitle: "Today", newListItems: foundItems });
+        }
+      })
+
+  }catch(e)  {
       console.log(e.message);
-    });
+    };
 });
 
 app.get("/:customListName", function (req, res) {
