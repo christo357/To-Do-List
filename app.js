@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 mongoose.connect(
-  "mongodb+srv://"+USERNAME+":"+PASSWORD+"@cluster0.e1zufkx.mongodb.net/todolistDB"
+  "mongodb+srv://"+USERNAME+":"+PASSWORD+"@cluster0.xfty7sn.mongodb.net/todolistDB"
 );
 
 const itemsSchema = new mongoose.Schema({
@@ -52,25 +52,24 @@ const List = mongoose.model("List", listSchema);
 //
 
 app.get("/", function (req, res) {
-    try{
-      Item.find({}, "name",(foundItems) => {
-        if (foundItems.length === 0) {
-          Item.insertMany(defaultItems)
-            // .then(() => {
-            //   console.log("successfully inserted");
-            // })
-            // .catch((e) => {
-            //   console.log(e.message);
-            // });
-          res.redirect("/");
-        } else {
-          res.render("list", { listTitle: "Today", newListItems: foundItems });
-        }
-      })
-
-  }catch(e)  {
+  Item.find({}, "name")
+    .then((foundItems) => {
+      if (foundItems.length === 0) {
+        Item.insertMany(defaultItems)
+          .then(() => {
+            console.log("successfully inserted");
+          })
+          .catch((e) => {
+            console.log(e.message);
+          });
+        res.redirect("/");
+      } else {
+        res.render("list", { listTitle: "Today", newListItems: foundItems });
+      }
+    })
+    .catch((e) => {
       console.log(e.message);
-    };
+    });
 });
 
 app.get("/:customListName", function (req, res) {
